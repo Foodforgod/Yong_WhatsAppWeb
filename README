@@ -1,0 +1,68 @@
+# WhatsApp Bot Control Panel
+
+A robust, consent-based WhatsApp messaging automation platform managed via a secure web control panel and executed by a persistent background worker node.
+
+## 🛠️ Technology Stack
+
+* **Web Management**: PHP 8.3+, MySQL 8+, Apache (XAMPP-compatible), PDO, Session Security, CSRF Protection.
+* **Automation Worker**: Python 3.12+, Playwright, Requests, Persistent Browser Profile.
+* **Security**: SHA-256 Hashed Bearer Tokens for Worker-to-API Authentication.
+
+## 📂 Project Architecture
+
+```text
+WhatsApp Bot Control Panel (PHP / MySQL)
+        ↓ (REST API via Bearer Token)
+Python Playwright Worker
+        ↓
+Persistent Browser Profile (Chromium / Edge)
+        ↓
+WhatsApp Web (Automated Dispatch & Status Reporting)
+⚙️ Installation & Setup
+1. Database Configuration
+Create a MySQL database named  and import your base schema, or set up tables via your local environment.whatsapp_bot
+
+2. Environment Configuration (.env)
+Create a  file in the root project directory () based on your production environment:.env/Yong_WhatsAppWeb/.env
+
+Code snippet
+# Application Environment
+APP_ENV=production
+APP_DEBUG=false
+APP_TIMEZONE=Asia/Kuala_Lumpur
+APP_URL=http://localhost/Yong_WhatsAppWeb/web
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=whatsapp_bot
+DB_USER=root
+DB_PASS=
+DB_CHARSET=utf8mb4
+
+# Security / Session
+SESSION_SECURE=false
+SESSION_HTTPONLY=true
+SESSION_SAMESITE=Strict
+
+# File Upload Constraints
+MAX_UPLOAD_SIZE_MB=10
+ALLOWED_MIME_TYPES=image/jpeg,image/png,image/webp,application/pdf
+
+# Worker Authentication
+WORKER_TOKEN=your_generated_bearer_token_here
+API_URL=http://localhost/Yong_WhatsAppWeb/web/api
+3. Web Control Panel Setup
+Place the project directory inside your local server root (e.g., ).C:/xampp/htdocs/Yong_WhatsAppWeb
+
+Navigate to  to register your worker node and generate a secure token.http://localhost/Yong_WhatsAppWeb/web/api_keys.php
+
+Copy the generated token into your  file under ..envWORKER_TOKEN
+
+4. Running the Automation Worker
+Install Python dependencies and start the background worker:
+
+Bash
+pip install playwright requests python-dotenv
+playwright install chromium
+python worker/bot_worker.py
