@@ -66,12 +66,10 @@ def poll_and_process():
                         try:
                             page.goto(chat_url, timeout=60000)
                             
-                            # Wait for the chat input and send button to render fully
                             send_button_selector = 'span[data-icon="send"]'
                             page.wait_for_selector(send_button_selector, timeout=15000)
                             time.sleep(1)
                             
-                            # Click send button directly
                             page.locator(send_button_selector).click()
                             time.sleep(2)
                             
@@ -82,7 +80,6 @@ def poll_and_process():
                             print(f"Job #{job_id} successfully sent and dispatched!")
                         
                         except Exception as ex:
-                            # Fallback: try pressing Enter if button locator times out
                             try:
                                 page.keyboard.press("Enter")
                                 time.sleep(2)

@@ -27,4 +27,3 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-date_default_timezone_set('Asia/Kuala_Lumpur');

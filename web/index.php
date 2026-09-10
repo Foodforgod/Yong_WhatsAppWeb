@@ -6,11 +6,19 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         if ($_POST['action'] === 'add_job') {
-            $phone = trim($_POST['phone']);
-            $body = trim($_POST['body']);
+            $phone = trim($_POST['phone'] ?? '');
+            $body = trim($_POST['body'] ?? '');
+            $scheduledAt = trim($_POST['scheduled_at'] ?? date('Y-m-d\TH:i'));
+            
+            // Convert datetime-local format (YYYY-MM-DDTHH:MM) to MySQL DATETIME format (YYYY-MM-DD HH:MM:SS)
+            $scheduledAt = str_replace('T', ' ', $scheduledAt);
+            if (strlen($scheduledAt) === 16) {
+                $scheduledAt .= ':00';
+            }
+
             if (!empty($phone) && !empty($body)) {
-                $stmt = $pdo->prepare("INSERT INTO message_jobs (recipient_phone, message_body, status) VALUES (?, ?, 'pending')");
-                $stmt->execute([$phone, $body]);
+                $stmt = $pdo->prepare("INSERT INTO message_jobs (recipient_phone, message_body, scheduled_at, status) VALUES (?, ?, ?, 'pending')");
+                $stmt->execute([$phone, $body, $scheduledAt]);
                 $message = "Message successfully added to queue!";
             }
         } elseif ($_POST['action'] === 'clear_failed') {
@@ -67,18 +75,20 @@ $counts = [
         .card h3 { margin: 0 0 5px 0; font-size: 12px; color: #64748b; text-transform: uppercase; }
         .card span { font-size: 22px; font-weight: bold; }
         .actions-panel { background: var(--card-bg); padding: 20px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 25px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
-        .actions-panel form { display: flex; gap: 10px; align-items: center; width: 100%; }
-        input[type="text"], textarea { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; }
-        input[type="text"] { width: 200px; }
-        textarea { flex-grow: 1; height: 36px; resize: none; }
+        .actions-panel form { display: flex; gap: 10px; align-items: center; width: 100%; flex-wrap: wrap; }
+        input[type="text"], input[type="datetime-local"], textarea { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; }
+        input[type="text"] { width: 180px; }
+        input[type="datetime-local"] { background: #fff; width: 180px; cursor: pointer; }
+        textarea { flex-grow: 1; height: 36px; resize: none; min-width: 250px; }
         button { background: var(--primary); color: white; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        button:hover { opacity: 0.9; }
         button.secondary { background: #64748b; }
         button.danger { background: #dc2626; }
         .table-wrap { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 13px; }
         th { background: #f8fafc; color: #475569; font-weight: 600; font-size: 11px; text-transform: uppercase; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 11px; text-transform: uppercase; display: inline-block; }
         .pending { background: #fef3c7; color: #92400e; }
         .processing { background: #e0f2fe; color: #0369a1; }
         .sent { background: #dcfce7; color: #166534; }
@@ -120,6 +130,8 @@ $counts = [
             <form method="POST">
                 <input type="hidden" name="action" value="add_job">
                 <input type="text" name="phone" placeholder="Recipient Phone (e.g. 60123456789)" required>
+                <!-- This is the Time Set Textbox -->
+                <input type="datetime-local" name="scheduled_at" required value="<?= date('Y-m-d\TH:i') ?>" title="Set Scheduled Time">
                 <textarea name="body" placeholder="Type quick message body..." required></textarea>
                 <button type="submit">➕ Queue Message</button>
             </form>
