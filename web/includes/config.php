@@ -24,6 +24,8 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
+    // Forces MySQL to use Malaysia timezone (+08:00) for all time queries like NOW()
+    $pdo->exec("SET time_zone = '+08:00';");
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }

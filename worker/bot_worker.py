@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 
 load_dotenv()
 
-API_URL = os.getenv("API_URL", "http://localhost/Yong_WhatsAppWeb/web/api")
+API_URL = "https://yonggene.kolejsynergy.com/Yong_WhatsAppWeb/web/api"
 WORKER_TOKEN = os.getenv("WORKER_TOKEN", "")
 
 headers = {
