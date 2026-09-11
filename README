@@ -68,7 +68,7 @@ playwright install chromium
 python worker/bot_worker.py
 
 Step 1: Set Up the Database
-![Alt text](https://raw.githubusercontent.com/Foodforgod/Yong_WhatsAppWeb/main/image.png)
+![替代文本](https://raw.githubusercontent.com/Foodforgod/Yong_WhatsAppWeb/main/image.png)
 Create a MySQL database named whatsapp_bot on your server. Run your schema setup to create the necessary tables like message_jobs and workers.
 
 Step 2: Configure Environment Variables
