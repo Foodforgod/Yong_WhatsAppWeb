@@ -66,3 +66,37 @@ Bash
 pip install playwright requests python-dotenv
 playwright install chromium
 python worker/bot_worker.py
+
+Step 1: Set Up the Database
+
+Create a MySQL database named whatsapp_bot on your server. Run your schema setup to create the necessary tables like message_jobs and workers.
+
+Step 2: Configure Environment Variables
+
+Create a .env file in your root project directory (/Yong_WhatsAppWeb/.env) containing your database credentials, API URL, and worker security configuration.
+
+Step 3: Upload and Configure Backend Files
+
+Upload your updated PHP files (config.php and claim.php) to your cPanel hosting environment. Ensure config.php forces the database connection timezone to +08:00 and PHP uses Asia/Kuala_Lumpur.
+
+Step 4: Generate Your Worker Token
+
+Navigate to your web control panel link (e.g., http://localhost/Yong_WhatsAppWeb/web/api_keys.php) to register your worker node and generate a secure authentication token.
+
+Step 5: Link the Worker Token
+
+Copy the generated secure token and paste it into your local .env file under the WORKER_TOKEN variable field.
+
+Step 6: Install Python Dependencies
+
+Open your terminal on your local machine, navigate to your project directory, and install the required automation packages:
+
+Bash
+pip install playwright requests python-dotenv
+playwright install chromium
+Step 7: Launch the Background Worker
+
+Start your Python automation runner to begin polling the cPanel backend for scheduled tasks:
+
+Bash
+python worker/bot_worker.py
